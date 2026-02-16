@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: lesson_db
+      POSTGRES_USER: lesson_user
+      POSTGRES_PASSWORD: lesson_password
+    volumes:
+      - lesson_postgres_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: ../../
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/lesson_db
+      SPRING_DATASOURCE_USERNAME: lesson_user
+      SPRING_DATASOURCE_PASSWORD: lesson_password
+
+volumes:
+  lesson_postgres_data:
