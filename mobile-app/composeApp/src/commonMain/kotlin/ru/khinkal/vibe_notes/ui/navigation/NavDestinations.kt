@@ -10,6 +10,9 @@ import ru.khinkal.vibe_notes.data.model.Note
 @Serializable
 sealed interface VibeDestination : NavKey {
     @Serializable
+    data object Splash : VibeDestination
+
+    @Serializable
     data object Auth : VibeDestination
 
     @Serializable
@@ -25,6 +28,7 @@ val NavConfig = SavedStateConfiguration {
             subclass(VibeDestination.Auth::class, VibeDestination.Auth.serializer())
             subclass(VibeDestination.Notes::class, VibeDestination.Notes.serializer())
             subclass(VibeDestination.EditNote::class, VibeDestination.EditNote.serializer())
+            subclass(VibeDestination.Splash::class, VibeDestination.Splash.serializer())
         }
     }
 }

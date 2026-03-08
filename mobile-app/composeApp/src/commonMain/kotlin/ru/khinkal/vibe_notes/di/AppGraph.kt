@@ -5,7 +5,6 @@ import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Includes
 import ru.khinkal.vibe_notes.data.repository.AuthRepository
 import ru.khinkal.vibe_notes.data.repository.NotesRepository
-import ru.khinkal.vibe_notes.data.repository.UserRepository
 import ru.khinkal.vibe_notes.ui.viewmodel.AuthViewModelFactory
 import ru.khinkal.vibe_notes.ui.viewmodel.NoteEditorViewModelFactory
 import ru.khinkal.vibe_notes.ui.viewmodel.NotesViewModelFactory
@@ -28,7 +27,6 @@ interface AppGraph {
 
     val authRepository: AuthRepository
     val notesRepository: NotesRepository
-    val userRepository: UserRepository
 
     val authViewModelFactory: AuthViewModelFactory
     val notesViewModelFactory: NotesViewModelFactory

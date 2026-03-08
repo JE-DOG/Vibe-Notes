@@ -29,15 +29,15 @@ fun NoteEditorScreen(
     onTitleChange: (String) -> Unit,
     onContentChange: (String) -> Unit,
     onSave: () -> Unit,
-    onDelete: () -> Unit,
     onBack: () -> Unit,
 ) {
+    val isReadOnly = state.noteId != null
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Text(
-                        text = if (state.noteId == null) "New note" else "Edit note",
+                        text = if (isReadOnly) "Note" else "New note",
                         style = MaterialTheme.typography.titleLarge,
                     )
                 },
@@ -47,13 +47,10 @@ fun NoteEditorScreen(
                     }
                 },
                 actions = {
-                    if (state.noteId != null) {
-                        TextButton(onClick = onDelete, enabled = !state.isDeleting) {
-                            Text("Delete")
+                    if (!isReadOnly) {
+                        TextButton(onClick = onSave, enabled = !state.isSaving) {
+                            Text("Save")
                         }
-                    }
-                    TextButton(onClick = onSave, enabled = !state.isSaving) {
-                        Text("Save")
                     }
                 },
             )
@@ -79,6 +76,7 @@ fun NoteEditorScreen(
                 label = { Text("Title") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
+                readOnly = isReadOnly,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             )
             OutlinedTextField(
@@ -88,11 +86,16 @@ fun NoteEditorScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(220.dp),
+                readOnly = isReadOnly,
                 keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = if (state.isSaving) "Saving..." else "Changes are sent to the server when you save.",
+                text = when {
+                    isReadOnly -> "Read-only. Editing is disabled."
+                    state.isSaving -> "Saving..."
+                    else -> "Changes are sent to the server when you save."
+                },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

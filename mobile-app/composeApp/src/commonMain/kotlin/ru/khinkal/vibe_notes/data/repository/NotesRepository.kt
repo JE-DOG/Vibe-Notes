@@ -9,11 +9,6 @@ class NotesRepository(
 ) {
     suspend fun getNotes(): ApiResult<List<Note>> = notesApi.getNotes()
 
-    suspend fun create(title: String, content: String): ApiResult<Note> =
+    suspend fun create(title: String, content: String): ApiResult<Unit> =
         notesApi.create(title, content)
-
-    suspend fun update(id: String, title: String, content: String): ApiResult<Note> =
-        notesApi.update(id, title, content)
-
-    suspend fun delete(id: String): ApiResult<Unit> = notesApi.delete(id)
 }

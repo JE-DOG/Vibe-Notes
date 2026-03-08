@@ -25,20 +25,24 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import ru.khinkal.vibe_notes.ui.theme.Sand
-import ru.khinkal.vibe_notes.ui.theme.Sky
 import ru.khinkal.vibe_notes.ui.viewmodel.AuthMode
 import ru.khinkal.vibe_notes.ui.viewmodel.AuthUiState
 
 @Composable
 fun AuthScreen(
     state: AuthUiState,
-    onEmailChange: (String) -> Unit,
+    onLoginChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSubmit: () -> Unit,
     onToggleMode: () -> Unit,
 ) {
-    val gradient = Brush.verticalGradient(listOf(Sand, Sky, Sand))
+    val gradient = Brush.verticalGradient(
+        listOf(
+            MaterialTheme.colorScheme.background,
+            MaterialTheme.colorScheme.surfaceVariant,
+            MaterialTheme.colorScheme.background,
+        ),
+    )
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -63,14 +67,15 @@ fun AuthScreen(
                 Text(
                     text = if (mode == AuthMode.Login) "Welcome back" else "Create your space",
                     style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
             }
             Spacer(modifier = Modifier.height(4.dp))
             OutlinedTextField(
-                value = state.email,
-                onValueChange = onEmailChange,
-                label = { Text("Email") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                value = state.login,
+                onValueChange = onLoginChange,
+                label = { Text("Login") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )

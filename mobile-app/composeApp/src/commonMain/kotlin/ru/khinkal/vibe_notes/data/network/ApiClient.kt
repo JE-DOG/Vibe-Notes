@@ -72,6 +72,7 @@ class ApiClient(
             } else {
                 if (response.status == HttpStatusCode.Unauthorized) {
                     tokenStore.clearToken()
+                    tokenStore.clearLogin()
                 }
                 ApiResult.Error(
                     statusCode = response.status.value,

@@ -1,9 +1,10 @@
 package ru.khinkal.vibe_notes.di
 
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
@@ -39,6 +40,14 @@ actual class PlatformBindings actual constructor(
     @Provides
     fun provideHttpClient(): HttpClient = HttpClient(OkHttp) {
         expectSuccess = false
+        engine {
+            config {
+                addInterceptor(
+                    ChuckerInterceptor.Builder(platformContext.context)
+                        .build()
+                )
+            }
+        }
         installCommonPlugins()
     }
 }

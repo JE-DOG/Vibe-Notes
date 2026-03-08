@@ -14,6 +14,9 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import common.nav.appPopTransitionSpec
+import common.nav.appPredictivePopTransitionSpec
+import common.nav.appTransitionSpec
 import ru.khinkal.vibe_notes.di.LocalAppGraph
 import ru.khinkal.vibe_notes.di.PlatformContext
 import ru.khinkal.vibe_notes.di.rememberAppGraph
@@ -22,6 +25,7 @@ import ru.khinkal.vibe_notes.ui.navigation.VibeDestination
 import ru.khinkal.vibe_notes.ui.screens.AuthScreen
 import ru.khinkal.vibe_notes.ui.screens.NoteEditorScreen
 import ru.khinkal.vibe_notes.ui.screens.NotesScreen
+import ru.khinkal.vibe_notes.ui.screens.SplashScreen
 import ru.khinkal.vibe_notes.ui.theme.VibeNotesTheme
 import ru.khinkal.vibe_notes.ui.viewmodel.AuthViewModel
 import ru.khinkal.vibe_notes.ui.viewmodel.MetroViewModelFactory
@@ -42,18 +46,28 @@ fun App(platformContext: PlatformContext) {
 @Composable
 private fun AppRoot() {
     val appGraph = LocalAppGraph.current
-    val backStack = rememberNavBackStack(NavConfig, VibeDestination.Auth)
-    val isSignedIn by appGraph.authRepository.isSignedIn.collectAsState(false)
+    val backStack = rememberNavBackStack(NavConfig, VibeDestination.Splash)
+    var signInState by remember { mutableStateOf<Boolean?>(null) }
     var notesViewModel by remember { mutableStateOf<NotesViewModel?>(null) }
 
-    LaunchedEffect(isSignedIn) {
-        val destination = if (isSignedIn) VibeDestination.Notes else VibeDestination.Auth
+    LaunchedEffect(Unit) {
+        appGraph.authRepository.isSignedIn.collect { signedIn ->
+            signInState = signedIn
+        }
+    }
+
+    LaunchedEffect(signInState) {
+        val destination = when (signInState) {
+            null -> VibeDestination.Splash
+            true -> VibeDestination.Notes
+            false -> VibeDestination.Auth
+        }
         val current = backStack.lastOrNull()
         if (current != destination) {
             backStack.clear()
             backStack.add(destination)
         }
-        if (!isSignedIn) {
+        if (signInState != true) {
             notesViewModel = null
         }
     }
@@ -61,11 +75,17 @@ private fun AppRoot() {
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
+        transitionSpec = appTransitionSpec(),
+        popTransitionSpec = appPopTransitionSpec(),
+        predictivePopTransitionSpec = appPredictivePopTransitionSpec(),
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator(),
         ),
         entryProvider = entryProvider {
+            entry<VibeDestination.Splash> {
+                SplashScreen()
+            }
             entry<VibeDestination.Auth> {
                 val viewModel: AuthViewModel = viewModel(
                     factory = MetroViewModelFactory(appGraph.authViewModelFactory::create),
@@ -73,7 +93,7 @@ private fun AppRoot() {
                 val state by viewModel.state.collectAsState()
                 AuthScreen(
                     state = state,
-                    onEmailChange = viewModel::onEmailChange,
+                    onLoginChange = viewModel::onLoginChange,
                     onPasswordChange = viewModel::onPasswordChange,
                     onSubmit = viewModel::submit,
                     onToggleMode = viewModel::toggleMode,
@@ -109,11 +129,7 @@ private fun AppRoot() {
                     viewModel.events.collect { event ->
                         when (event) {
                             is NoteEditorEvent.Saved -> {
-                                notesViewModel?.onNoteUpserted(event.note)
-                                backStack.removeLastOrNull()
-                            }
-                            is NoteEditorEvent.Deleted -> {
-                                notesViewModel?.onNoteDeleted(event.noteId)
+                                notesViewModel?.refresh()
                                 backStack.removeLastOrNull()
                             }
                         }
@@ -125,7 +141,6 @@ private fun AppRoot() {
                     onTitleChange = viewModel::onTitleChange,
                     onContentChange = viewModel::onContentChange,
                     onSave = viewModel::save,
-                    onDelete = viewModel::delete,
                     onBack = { backStack.removeLastOrNull() },
                 )
             }

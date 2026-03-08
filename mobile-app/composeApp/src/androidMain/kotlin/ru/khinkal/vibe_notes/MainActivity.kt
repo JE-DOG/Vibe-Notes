@@ -5,9 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import ru.khinkal.vibe_notes.di.PlatformContext
+import ru.khinkal.vibe_notes.ui.theme.LocalActivity
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,7 +17,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App(platformContext = PlatformContext(applicationContext))
+            CompositionLocalProvider(LocalActivity provides this) {
+                App(platformContext = PlatformContext(applicationContext))
+            }
         }
     }
 }
@@ -23,5 +27,7 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App(platformContext = PlatformContext(LocalContext.current))
+    CompositionLocalProvider(LocalActivity provides null) {
+        App(platformContext = PlatformContext(LocalContext.current))
+    }
 }

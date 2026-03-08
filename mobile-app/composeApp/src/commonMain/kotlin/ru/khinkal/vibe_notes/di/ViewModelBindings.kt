@@ -4,7 +4,6 @@ import dev.zacsweers.metro.BindingContainer
 import dev.zacsweers.metro.Provides
 import ru.khinkal.vibe_notes.data.repository.AuthRepository
 import ru.khinkal.vibe_notes.data.repository.NotesRepository
-import ru.khinkal.vibe_notes.data.repository.UserRepository
 import ru.khinkal.vibe_notes.ui.viewmodel.AuthViewModel
 import ru.khinkal.vibe_notes.ui.viewmodel.AuthViewModelFactory
 import ru.khinkal.vibe_notes.ui.viewmodel.NoteEditorViewModel
@@ -24,10 +23,9 @@ class ViewModelBindings {
     @Provides
     fun provideNotesViewModelFactory(
         notesRepository: NotesRepository,
-        userRepository: UserRepository,
         authRepository: AuthRepository,
     ): NotesViewModelFactory = NotesViewModelFactory {
-        NotesViewModel(notesRepository, userRepository, authRepository)
+        NotesViewModel(notesRepository, authRepository)
     }
 
     @Provides

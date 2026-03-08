@@ -15,17 +15,15 @@ import ru.khinkal.vibe_notes.data.network.ApiResult
 import ru.khinkal.vibe_notes.data.repository.NotesRepository
 
 data class NoteEditorUiState(
-    val noteId: String? = null,
+    val noteId: Int? = null,
     val title: String = "",
     val content: String = "",
     val isSaving: Boolean = false,
-    val isDeleting: Boolean = false,
     val errorMessage: String? = null,
 )
 
 sealed interface NoteEditorEvent {
-    data class Saved(val note: Note) : NoteEditorEvent
-    data class Deleted(val noteId: String) : NoteEditorEvent
+    data object Saved : NoteEditorEvent
 }
 
 class NoteEditorViewModel(
@@ -59,47 +57,26 @@ class NoteEditorViewModel(
 
     fun save() {
         val current = state.value
+        if (current.noteId != null) {
+            _state.update { it.copy(errorMessage = "Editing existing notes is not supported.") }
+            return
+        }
         if (current.title.isBlank() || current.content.isBlank()) {
             _state.update { it.copy(errorMessage = "Title and content are required.") }
             return
         }
         viewModelScope.launch {
             _state.update { it.copy(isSaving = true, errorMessage = null) }
-            val result = if (current.noteId == null) {
-                notesRepository.create(current.title.trim(), current.content.trim())
-            } else {
-                notesRepository.update(
-                    id = current.noteId,
-                    title = current.title.trim(),
-                    content = current.content.trim(),
-                )
-            }
+            val result = notesRepository.create(current.title.trim(), current.content.trim())
             when (result) {
                 is ApiResult.Success -> {
                     _state.update { it.copy(isSaving = false) }
-                    _events.emit(NoteEditorEvent.Saved(result.value))
+                    _events.emit(NoteEditorEvent.Saved)
                 }
+
                 is ApiResult.Error -> {
                     _state.update {
                         it.copy(isSaving = false, errorMessage = result.message)
-                    }
-                }
-            }
-        }
-    }
-
-    fun delete() {
-        val noteId = state.value.noteId ?: return
-        viewModelScope.launch {
-            _state.update { it.copy(isDeleting = true, errorMessage = null) }
-            when (val result = notesRepository.delete(noteId)) {
-                is ApiResult.Success -> {
-                    _state.update { it.copy(isDeleting = false) }
-                    _events.emit(NoteEditorEvent.Deleted(noteId))
-                }
-                is ApiResult.Error -> {
-                    _state.update {
-                        it.copy(isDeleting = false, errorMessage = result.message)
                     }
                 }
             }

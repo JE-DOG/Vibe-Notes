@@ -16,7 +16,7 @@ enum class AuthMode {
 }
 
 data class AuthUiState(
-    val email: String = "",
+    val login: String = "",
     val password: String = "",
     val mode: AuthMode = AuthMode.Login,
     val isLoading: Boolean = false,
@@ -29,8 +29,8 @@ class AuthViewModel(
     private val _state = MutableStateFlow(AuthUiState())
     val state: StateFlow<AuthUiState> = _state.asStateFlow()
 
-    fun onEmailChange(value: String) {
-        _state.update { it.copy(email = value, errorMessage = null) }
+    fun onLoginChange(value: String) {
+        _state.update { it.copy(login = value, errorMessage = null) }
     }
 
     fun onPasswordChange(value: String) {
@@ -47,17 +47,17 @@ class AuthViewModel(
     }
 
     fun submit() {
-        val email = state.value.email.trim()
+        val login = state.value.login.trim()
         val password = state.value.password
-        if (email.isBlank() || password.isBlank()) {
-            _state.update { it.copy(errorMessage = "Email and password are required.") }
+        if (login.isBlank() || password.isBlank()) {
+            _state.update { it.copy(errorMessage = "Login and password are required.") }
             return
         }
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, errorMessage = null) }
             val result = when (state.value.mode) {
-                AuthMode.Login -> authRepository.login(email, password)
-                AuthMode.Register -> authRepository.register(email, password)
+                AuthMode.Login -> authRepository.login(login, password)
+                AuthMode.Register -> authRepository.register(login, password)
             }
             _state.update { current ->
                 when (result) {
