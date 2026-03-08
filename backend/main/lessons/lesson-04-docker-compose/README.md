@@ -42,5 +42,5 @@
 
 ## Проверка
 
-- Запуск: `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson04docker.*"`
+- Запуск: `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson04docker.*"`
 - Тест проверяет наличие обязательных ключей и связей в compose-файле.

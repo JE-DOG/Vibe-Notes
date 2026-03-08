@@ -40,5 +40,5 @@
 
 ## Проверка
 
-- Запуск: `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson02jwt.*"`
+- Запуск: `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson02jwt.*"`
 - Тесты проверяют валидный кейс и негативные сценарии (tampered token).

@@ -13,17 +13,17 @@
 ## Быстрые команды
 
 - Урок 01 (Exposed):
-    - `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson01exposed.*"`
+    - `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson01exposed.*"`
 - Урок 02 (JWT):
-    - `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson02jwt.*"`
+    - `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson02jwt.*"`
 - Урок 03 (Auth Service):
-    - `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson03auth.*"`
+    - `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson03auth.*"`
 - Урок 04 (Docker Compose):
-    - `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson04docker.*"`
+    - `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson04docker.*"`
 - Урок 05 (Validation):
-    - `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson05validation.*"`
+    - `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson05validation.*"`
 - Урок 06 (ProblemDetail):
-    - `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson06problem.*"`
+    - `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson06problem.*"`
 
 ## Карта уроков
 

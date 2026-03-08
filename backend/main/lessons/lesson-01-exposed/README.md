@@ -45,5 +45,5 @@
 
 ## Проверка
 
-- Запуск: `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson01exposed.*"`
+- Запуск: `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson01exposed.*"`
 - Тесты должны проверить вставку, выборку и обновление.

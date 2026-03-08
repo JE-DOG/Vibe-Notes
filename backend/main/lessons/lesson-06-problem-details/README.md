@@ -43,4 +43,4 @@
 
 ## Проверка
 
-- `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson06problem.*"`
+- `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson06problem.*"`

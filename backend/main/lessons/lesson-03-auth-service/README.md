@@ -45,5 +45,5 @@
 
 ## Проверка
 
-- Запуск: `./gradlew test --tests "ru.khinkal.springDemo.learning.lesson03auth.*"`
+- Запуск: `./gradlew test --tests "ru.khinkal.vibeNotes.learning.lesson03auth.*"`
 - Тесты проверяют happy-path и ошибки (`duplicate email`, `wrong password`, `invalid token`).

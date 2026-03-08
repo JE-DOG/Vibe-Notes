@@ -4,9 +4,15 @@ plugins {
     alias(libs.plugins.kotlin.spring)
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependency.management)
+    application
 }
 
-group = "dag.khinkal"
+application {
+    mainClass.set("ru.khinkal.vibeNotes.VibeNotesApplication")
+    applicationName = "vibe-notes-back"
+}
+
+group = "ru.khinkal"
 version = "0.0.1-SNAPSHOT"
 
 java {
