@@ -8,7 +8,7 @@ plugins {
 }
 
 application {
-    mainClass.set("ru.khinkal.vibeNotes.VibeNotesApplication")
+    mainClass.set("ru.khinkal.vibeNotes.VibeNotesApplicationKt")
     applicationName = "vibe-notes-back"
 }
 
