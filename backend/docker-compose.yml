@@ -4,10 +4,19 @@ services:
     image: postgres:10.4
 
   # ------------------------- DEV ----------------------------
-  postgres-dev:
+  db:
     <<: *POSTGRES
     ports:
       - "5432:5432"
     volumes:
       - ./db/dev/databases.sql:/docker-entrypoint-initdb.d/1-dev-databases.sql
       - ./db/dev/roles.sql:/docker-entrypoint-initdb.d/1-dev-roles.sql
+
+  backend:
+    build:
+      dockerfile: main/Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      db:
+        condition: service_healthy
